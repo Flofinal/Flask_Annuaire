@@ -77,11 +77,12 @@ def signup():
     )
     r = requests.post(url, headers=headers, data=payload)
     res = r.json()
+    if current_user.is_authenticated:
+        if res["result"] == "ok" and current_user.role == "admin":
+            flash('Création réussite', "is-success")
+        return redirect(url_for('main.signup'))
     if res["result"] == "try":
         flash('Email existe déjà', "is-danger")
-        return redirect(url_for('main.signup'))
-    if res["result"] == "ok" and current_user.role == "admin":
-        flash('Création réussite', "is-success")
         return redirect(url_for('main.signup'))
     if res["result"] == "ok":
         return redirect(url_for('main.login'))
