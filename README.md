@@ -17,6 +17,20 @@ Les bases de données sont remplies de X utilisateurs membre et admin.
 Il est évidemment possible de créer de nouveaux utilisateurs, posts et abonnements durant votre navigation.
 # Application
 
+
+## Création de la base SQL : 
+```sql
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `password` varchar(200) NOT NULL,
+  `numero` varchar(200) NOT NULL,
+  `role` varchar(200) NOT NULL DEFAULT 'member',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
 ## Pour lancer l'application sur Windows :
 
 ```bash
