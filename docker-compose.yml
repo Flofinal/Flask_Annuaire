@@ -1,0 +1,19 @@
+services:
+  front:
+    build: ./front
+    image: front
+    ports:
+      - 5000:5000
+    networks:
+      - net
+
+  user:
+    build: ./user
+    image: user
+    ports:
+      - 5001:5001
+    networks:
+      - net
+
+networks:
+    net: { }

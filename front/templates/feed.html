@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <h3 class="text-center">Annuaire</h3>
+            </div>
+        </div>
+        <form method="POST" action="/recherche">
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Rechercher par nom :</label>
+                </div>
+                <div class="field has-addons">
+                    <div class="control">
+                        <input class="input" name="name" type="text" placeholder="Nom">
+                    </div>
+                    <div class="control">
+                        <button class="button is-info">
+                            Rechercher
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>E-mail</th>
+                    <th>Numéro</th>
+                    {% if current_user.role == "admin" %}
+                    <th>Action</th>
+                    {% endif %}
+                    {% if current_user.role == "admin" %}
+                    <th>Mot de Passe</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in user %}
+                <tr>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.email }}</td>
+                    <td>{{ i.numero }}</td>
+                    {% if current_user.role == "admin" %}
+                    <td>
+                        <div class="buttons are-small column ">
+                            <form method="post" action="/supprimer">
+                                <button class="button is-danger is-rounded" type="submit" name="supprimer"
+                                        value={{i.email}}>
+                                    Supprimer
+                                </button>
+                            </form>
+                            {% if i.role == "member" %}
+                            <form method="post" action="/promouvoir">
+                                <button class="button is-success is-rounded" type="submit" name="promouvoir"
+                                        value={{i.email}}>
+                                    Promouvoir
+                                </button>
+                            </form>
+                            {% endif %}
+                            {% if i.role == "admin" %}
+                            <form method="post" action="/retrograder">
+                                <button class="button is-danger is-rounded" type="submit" name="retrograder"
+                                        value={{i.email}}>
+                                    Rétrograder
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('main.adminpass',variable=i.email) }}" class="button is-danger is-rounded">
+                            Changer le mot de passe
+                        </a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+$("#lanuchModal").click(function() {
+  $(".modal").addClass("is-active");
+});
+
+$(".modal-close").click(function() {
+   $(".modal").removeClass("is-active");
+});
+
+$("#closebtn").click(function() {
+   $(".modal").removeClass("is-active");
+});
+
+
+
+
+
+
+</script>
+{% endblock %}

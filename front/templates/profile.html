@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Changer de mot de passe</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if "Changement réussi" in messages %}
+        <div class="notification is-success">
+            {{ messages[0] }}
+        </div>
+        {% elif messages %}
+        <div class="notification is-danger">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="/profile">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="password" name="password1" placeholder="Votre mot de passe"
+                           required>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="password" name="password2" placeholder="Nouveau mot de passe"
+                           required>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="password" name="password3" placeholder="Nouveau mot de passe"
+                           required>
+                </div>
+            </div>
+            <button class="button is-block is-info is-large is-fullwidth">Valider</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

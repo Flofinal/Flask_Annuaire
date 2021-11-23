@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+    Etes-vous sûr de vouloir supprimer votre compte ?
+</h1>
+<form method="post" action="/deleteUser">
+    <button class="button is-success is-rounded " type="submit"
+            name="Confirmer">
+        Confirmer
+    </button>
+</form>
+{% endblock %}

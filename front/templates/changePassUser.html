@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+    Changer le mot de passe du mail : {{variable}}
+</h1>
+<form method="post" action="/changepass">
+    <div class="field">
+        <div class="control">
+            <input class="input is-medium" type="password"
+                   name="password" placeholder="Nouveau mot de passe"
+                   required>
+        </div>
+    </div>
+    <button class="button is-danger is-rounded " type="submit"
+            name="changepass"
+            value={{variable}}>
+        Valider le changement
+    </button>
+</form>
+{% endblock %}
