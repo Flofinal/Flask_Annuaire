@@ -25,7 +25,7 @@ def signup_post():
         sql="INSERT INTO user (email,name,numero,password) VALUES (%s, %s,%s, %s)"
         val=(d["email"],d["name"],d["numero"],generate_password_hash(d["password"], method='sha256'))
         mycursor.execute(sql,val)
-
+        mysql.connection.commit()
         return make_response(
             {"result": "ok"},
             200
@@ -73,6 +73,7 @@ def profile_pwd():
         sql = "UPDATE user SET password = %s WHERE email = %s"
         val = (generate_password_hash(d["password"], method='sha256'),d["email"])
         mycursor.execute(sql, val)
+        mysql.connection.commit()
         return make_response(
             {"result": "ok"},
             200
@@ -177,6 +178,7 @@ def deleteUser():
         sql = "DELETE FROM user WHERE email = %s"
         adr = (d["email"],)
         mycursor.execute(sql, adr)
+        mysql.connection.commit()
 
         return make_response({
             "result": "ok"},
@@ -196,6 +198,7 @@ def promouvoir():
         sql = "UPDATE user SET role = %s WHERE email = %s"
         val = ("admin",d["email"])
         mycursor.execute(sql, val)
+        mysql.connection.commit()
         return make_response(
             {"result": "ok"},
             200
@@ -214,6 +217,7 @@ def retrograder():
         sql = "UPDATE user SET role = %s WHERE email = %s"
         val = ("member",d["email"])
         mycursor.execute(sql, val)
+        mysql.connection.commit()
         return make_response(
             {"result": "ok"},
             200

@@ -2,13 +2,16 @@ import json
 import requests
 from flask import Flask
 from flask_login import LoginManager
-
+import os
 
 from front.models import User
 
-url_path="http://127.0.0.1:5001/"
+url_path="http://user:5001/"
+
+
 
 def create_app():
+    print(url_path)
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'secret-key-goes-here'
     # blueprint for non-auth parts of app

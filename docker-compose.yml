@@ -1,19 +1,38 @@
+version: '3.7'
+
 services:
   front:
-    build: ./front
     image: front
     ports:
       - 5000:5000
     networks:
       - net
-
+    environment:
+      ADD_BACK: user
+    restart: on-failure
+    
   user:
-    build: ./user
     image: user
-    ports:
-      - 5001:5001
     networks:
       - net
+    ports:
+      - 5001:5001
+    environment:
+      MYSQL_HOST: db
+    restart: on-failure
 
+  db:
+    image: mysql:5.7.36
+    volumes:
+      - ./mysql-load:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_DATABASE: annuaire
+      MYSQL_USER : user
+      MYSQL_PASSWORD : password
+      MYSQL_ROOT_PASSWORD: root
+    restart: on-failure
+    networks:
+      - net
+    
 networks:
     net: { }

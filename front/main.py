@@ -5,6 +5,7 @@ from flask import Blueprint, render_template, url_for, request, flash
 from flask_login import login_required, logout_user, login_user, current_user
 from werkzeug.security import check_password_hash
 from werkzeug.utils import redirect
+import os
 
 from front.models import User
 
@@ -13,7 +14,7 @@ headers = {
     'Content-Type': 'application/json'
 }
 
-url_path="http://127.0.0.1:5001/"
+url_path="http://user:5001/"
 
 @main.route('/')
 def index():
