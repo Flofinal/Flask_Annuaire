@@ -21,10 +21,10 @@ services:
       MYSQL_HOST: db
     restart: on-failure
 
-  db:
+  db-test:
     image: mysql:5.7.36
     volumes:
-      - ./mysql-load:/docker-entrypoint-initdb.d
+      - ./mysql-load-test:/docker-entrypoint-initdb.d
     environment:
       MYSQL_DATABASE: annuaire
       MYSQL_USER : user
@@ -33,6 +33,8 @@ services:
     restart: on-failure
     networks:
       - net
-    
+    ports:
+      - 3307:3306
+
 networks:
     net: { }

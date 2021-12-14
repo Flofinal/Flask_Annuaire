@@ -1,7 +1,7 @@
 import json
 from flask import Blueprint, request, make_response
-from werkzeug.security import generate_password_hash, check_password_hash
 from user import mysql
+import hashlib
 
 auth = Blueprint('auth', __name__)
 
@@ -22,8 +22,10 @@ def signup_post():
                 200
             )
         # create a new user with the form data. Hash the password so the plaintext version isn't saved.
+        encoded_pwd = d["password"].encode()
+        hashed_pwd = hashlib.sha256(encoded_pwd).hexdigest()
         sql="INSERT INTO user (email,name,numero,password) VALUES (%s, %s,%s, %s)"
-        val=(d["email"],d["name"],d["numero"],generate_password_hash(d["password"], method='sha256'))
+        val=(d["email"],d["name"],d["numero"],hashed_pwd)
         mycursor.execute(sql,val)
         mysql.connection.commit()
         return make_response(
@@ -47,7 +49,9 @@ def login_post():
         mycursor.execute(sql, val)
         columns = mycursor.description
         result = [{columns[index][0]: column for index, column in enumerate(value)} for value in mycursor.fetchall()]
-        if not result or not check_password_hash(result[0]["password"], d["password"]):
+        encoded_pwd = d["password"].encode()
+        hashed_pwd = hashlib.sha256(encoded_pwd).hexdigest()
+        if not result or not result[0]["password"] == hashed_pwd:
             return make_response(
                 {"result": "wrong"},
                 200
@@ -71,7 +75,9 @@ def profile_pwd():
         d = request.json
         mycursor = mysql.connection.cursor()
         sql = "UPDATE user SET password = %s WHERE email = %s"
-        val = (generate_password_hash(d["password"], method='sha256'),d["email"])
+        encoded_pwd = d["password"].encode()
+        hashed_pwd = hashlib.sha256(encoded_pwd).hexdigest()
+        val = (hashed_pwd, d["email"])
         mycursor.execute(sql, val)
         mysql.connection.commit()
         return make_response(
