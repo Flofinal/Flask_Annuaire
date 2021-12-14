@@ -3,9 +3,8 @@ import json
 import requests
 from flask import Blueprint, render_template, url_for, request, flash
 from flask_login import login_required, logout_user, login_user, current_user
-from werkzeug.security import check_password_hash
 from werkzeug.utils import redirect
-import os
+import hashlib
 
 from front.models import User
 
@@ -122,7 +121,10 @@ def profile_pwd():
     if password3 != password2:
         flash("Les mots de passe sont différents", "is-danger")
         return redirect(url_for('main.profile'))
-    if not check_password_hash(current_user.password, password1):
+
+    encoded_pwd = password1.encode()
+    hashed_pwd = hashlib.sha256(encoded_pwd).hexdigest()
+    if current_user.password != hashed_pwd:
         flash('Mauvais mot de passe', "is-danger")
         return redirect(url_for('main.profile'))
     url = url_path+"profile_auth"

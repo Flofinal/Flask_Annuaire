@@ -1,10 +1,11 @@
 import json
+from os import system
 from flask import Blueprint, request, make_response
 from user import mysql
 import hashlib
+import logging
 
 auth = Blueprint('auth', __name__)
-
 
 @auth.route('/signup_auth', methods=['POST'])
 def signup_post():
@@ -28,16 +29,19 @@ def signup_post():
         val=(d["email"],d["name"],d["numero"],hashed_pwd)
         mycursor.execute(sql,val)
         mysql.connection.commit()
+        logging.info('%s signed up in the directory', d["email"])
+        
         return make_response(
             {"result": "ok"},
             200
         )
     except:
+        logging.error('%s could not sign up - SQL Error', d["email"])
+        
         return make_response(
             {"result": "error"},
             400
         )
-
 
 @auth.route('/login_auth', methods=['POST'])
 def login_post():
@@ -52,17 +56,23 @@ def login_post():
         encoded_pwd = d["password"].encode()
         hashed_pwd = hashlib.sha256(encoded_pwd).hexdigest()
         if not result or not result[0]["password"] == hashed_pwd:
+            logging.warning('%s tried to log but wrong password', d["email"])
+            
             return make_response(
                 {"result": "wrong"},
                 200
             )
         # if the above check passes, then we know the user has the right credentials
         payload = json.dumps(dict(email=result[0]["email"], password=result[0]["password"], id=result[0]["id"], name=result[0]["name"],numero=result[0]["numero"], role=result[0]["role"] ))
+        logging.info('%s logged in', d["email"])
+        
         return make_response(
             {"result": payload},
             200
         )
     except:
+        logging.error('%s could not log in - SQL Error', d["email"])
+        
         return make_response(
             {"result": "error"},
             400
@@ -80,11 +90,14 @@ def profile_pwd():
         val = (hashed_pwd, d["email"])
         mycursor.execute(sql, val)
         mysql.connection.commit()
+
+        logging.info('%s changed his password', d["email"])
         return make_response(
             {"result": "ok"},
             200
         )
     except:
+        logging.error('%s could not change his password - SQL Error', d["email"])
         return make_response(
             {"result": "error"},
             400
@@ -185,12 +198,13 @@ def deleteUser():
         adr = (d["email"],)
         mycursor.execute(sql, adr)
         mysql.connection.commit()
-
+        logging.info('%s deleted his account', d["email"])
         return make_response({
             "result": "ok"},
             200
         )
     except:
+        logging.error('%s could not delete his account - SQL Error', d["email"])
         return make_response(
             {"result": "error"},
             400
@@ -205,11 +219,14 @@ def promouvoir():
         val = ("admin",d["email"])
         mycursor.execute(sql, val)
         mysql.connection.commit()
+
+        logging.info('%s got promoted to admin', d["email"])
         return make_response(
             {"result": "ok"},
             200
         )
     except:
+        logging.error('%s could not be promoted to admin - SQL Error', d["email"])
         return make_response(
             {"result": "error"},
             400
@@ -224,12 +241,16 @@ def retrograder():
         val = ("member",d["email"])
         mycursor.execute(sql, val)
         mysql.connection.commit()
+        logging.info('%s got downgraded to member', d["email"])
         return make_response(
             {"result": "ok"},
             200
         )
     except:
+        logging.error('%s could not be downgraded to member - SQL Error', d["email"])
         return make_response(
             {"result": "error"},
             400
         )
+
+    
