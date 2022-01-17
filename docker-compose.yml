@@ -4,9 +4,9 @@ services:
   front:
     image: front
     ports:
-      - 5000:5000
+      - 10.10.0.2:5000:5000
     networks:
-      - net
+      - front-network
     environment:
       ADD_BACK: user
     restart: on-failure
@@ -14,9 +14,9 @@ services:
   user:
     image: user
     networks:
-      - net
+      - back-network
     ports:
-      - 5001:5001
+      - 10.20.0.2:5001:5001
     environment:
       MYSQL_HOST: db
     restart: on-failure
@@ -32,9 +32,11 @@ services:
       MYSQL_ROOT_PASSWORD: root
     restart: on-failure
     networks:
-      - net
+      - db-network
     ports:
-      - 3307:3306
+      - 10.30.0.2:3307:3306
 
 networks:
-    net: { }
+    front-network:
+    back-network:
+    db-network:
