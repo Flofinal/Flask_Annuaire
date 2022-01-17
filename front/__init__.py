@@ -6,7 +6,7 @@ import os
 
 from front.models import User
 
-url_path="http://user:5001/"
+url_path="http://10.20.0.2:5001/"
 
 
 

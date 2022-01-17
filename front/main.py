@@ -13,7 +13,7 @@ headers = {
     'Content-Type': 'application/json'
 }
 
-url_path="http://user:5001/"
+url_path="http://10.20.0.2:5001/"
 
 @main.route('/')
 def index():
