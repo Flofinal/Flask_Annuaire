@@ -10,8 +10,9 @@ services:
     environment:
       ADD_BACK: user
     restart: on-failure
-    
-  image: user
+
+  user:
+    image: user
     networks:
       - back-network
     ports:
