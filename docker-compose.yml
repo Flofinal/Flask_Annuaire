@@ -21,7 +21,7 @@ services:
       MYSQL_HOST: db
     restart: on-failure
 
-  db-test:
+  db:
     image: mysql:5.7.36
     volumes:
       - ./mysql-load-test:/docker-entrypoint-initdb.d
@@ -38,8 +38,29 @@ services:
 
 networks:
   front-network:
-    driver: bridge-front
+    name: front-network
+    driver: macvlan
+    driver_opts:
+      parent: ens224
+    ipam:
+      config:
+        - subnet: "10.10.0.0/24"
+          gateway: "10.10.0.1"
   back-network:
-    driver: bridge-back
+    name: back-network
+    driver: macvlan
+    driver_opts:
+      parent: ens160
+    ipam:
+      config:
+        - subnet: "10.20.0.0/24"
+          gateway: "10.20.0.1"
   db-network:
-    driver: bridge-bdd
+    name: db-network
+    driver: macvlan
+    driver_opts:
+      parent: ens192
+    ipam:
+      config:
+        - subnet: "10.30.0.0/24"
+          gateway: "10.30.0.1"
