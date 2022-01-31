@@ -1,12 +1,13 @@
-version: '3.7'
+version: '2.4'
 
 services:
   front:
     image: front
-    ports:
-      - 10.10.0.2:5000:5000
     networks:
-      - front-network
+      vlan:
+        ipv4_address: 10.10.0.2
+    ports:
+      - 5000:5000
     environment:
       ADD_BACK: user
     restart: on-failure
@@ -14,9 +15,10 @@ services:
   user:
     image: user
     networks:
-      - back-network
+      vlan:
+        ipv4_address: 10.20.0.2
     ports:
-      - 10.20.0.2:5001:5001
+      - 5001:5001
     environment:
       MYSQL_HOST: db
     restart: on-failure
@@ -32,7 +34,8 @@ services:
       MYSQL_ROOT_PASSWORD: root
     restart: on-failure
     networks:
-      - db-network
+      vlan:
+        ipv4_address: 10.30.0.2
     ports:
       - 10.30.0.2:3307:3306
 
